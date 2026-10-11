@@ -119,7 +119,7 @@ export default function Hero() {
               className="absolute -inset-4 rounded-full border border-dashed border-indigo-500/20"
             />
 
-            {/* Main card */}
+            {/* Main card — swap profileImage in data/portfolio.ts to show a headshot instead of code */}
             <div className="relative h-80 w-72 rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.03] to-transparent backdrop-blur-xl">
               {/* Top bar */}
               <div className="flex items-center justify-between border-b border-white/5 px-5 py-3.5">
@@ -128,11 +128,23 @@ export default function Hero() {
                   <div className="h-2.5 w-2.5 rounded-full bg-yellow-500/60" />
                   <div className="h-2.5 w-2.5 rounded-full bg-green-500/60" />
                 </div>
-                <span className="text-xs font-medium text-gray-600">profile.tsx</span>
+                <span className="text-xs font-medium text-gray-600">
+                  {personalInfo.profileImage ? 'profile.jpg' : 'profile.tsx'}
+                </span>
               </div>
 
-              {/* Code content */}
-              <div className="space-y-2.5 p-5 font-mono text-xs leading-relaxed">
+              {/* Headshot image OR code content */}
+              {personalInfo.profileImage ? (
+                <div className="relative h-[calc(100%-49px)] w-full overflow-hidden rounded-b-3xl">
+                  <img
+                    src={personalInfo.profileImage}
+                    alt={personalInfo.name}
+                    className="h-full w-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#030712] via-transparent to-transparent" />
+                </div>
+              ) : (
+                <div className="space-y-2.5 p-5 font-mono text-xs leading-relaxed">
                 <div className="flex gap-2">
                   <span className="text-indigo-400">const</span>
                   <span className="text-cyan-300">dev</span>
@@ -169,6 +181,7 @@ export default function Hero() {
                   <span className="ml-1 animate-pulse text-indigo-400">|</span>
                 </div>
               </div>
+              )}
 
               {/* Floating icons */}
               <motion.div

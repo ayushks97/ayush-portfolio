@@ -15,10 +15,25 @@ import {
   Trophy,
   Award,
   Briefcase,
+  Rocket,
+  BookOpen,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
-export const personalInfo = {
+export interface PersonalInfo {
+  name: string;
+  roleBadge: string;
+  tagline: string;
+  email: string;
+  phone: string;
+  location: string;
+  linkedin: string;
+  github: string;
+  /** Optional headshot image URL — swap in a real photo without changing layout. */
+  profileImage?: string;
+}
+
+export const personalInfo: PersonalInfo = {
   name: 'Ayush Kumar Srivastava',
   roleBadge: 'Full-Stack Developer | Azure Certified | GenAI Enthusiast',
   tagline:
@@ -28,16 +43,26 @@ export const personalInfo = {
   location: 'Prayagraj, UP, India',
   linkedin: 'https://www.linkedin.com/in/ayush-srivastava-0086ba37b',
   github: 'https://github.com/ayushks97',
+  profileImage: undefined,
 };
 
-export const aboutBio = `Third-year B.Tech Computer Science student at United College of Engineering and Research (AKTU), driven by high-performance engineering, clean code, and cloud infrastructure.`;
+export const aboutBio = `3rd-year B.Tech Computer Science student at United College of Engineering and Research (AKTU), focused on full-stack web architecture, clean modular code, Data Structures & Algorithms, and cloud infrastructure.`;
 
-export const stats = [
+export interface Stat {
+  id: string;
+  value: string;
+  label: string;
+  sub: string;
+  icon: LucideIcon;
+  accent: 'indigo' | 'cyan';
+}
+
+export const stats: Stat[] = [
   {
     id: 'rank',
     value: '58K+',
     label: 'National Rank',
-    sub: 'Top percentile in National Aptitude Test',
+    sub: 'Top percentile in National Aptitude Test out of 5.1L+ candidates',
     icon: Trophy,
     accent: 'indigo',
   },
@@ -45,21 +70,31 @@ export const stats = [
     id: 'certs',
     value: '4+',
     label: 'Industry Certifications',
-    sub: 'Microsoft & Oracle certified',
+    sub: 'Microsoft & Oracle certified (Azure, Fabric Data Engineer, Agentic AI)',
     icon: Award,
     accent: 'cyan',
   },
   {
     id: 'exp',
-    value: '2',
+    value: '2+',
     label: 'Professional Experiences',
-    sub: 'Ex-IBM Trainee & IIT Bombay Ambassador',
+    sub: 'Ex-IBM Trainee & Campus Ambassador at E-Cell, IIT Bombay',
     icon: Briefcase,
     accent: 'indigo',
   },
-] as const;
+];
 
-export const certifications = [
+export interface Certification {
+  id: string;
+  title: string;
+  code: string;
+  issuer: string;
+  score: string;
+  color: string;
+  icon: LucideIcon;
+}
+
+export const certifications: Certification[] = [
   {
     id: 'az900',
     title: 'Microsoft Certified: Azure Fundamentals',
@@ -89,8 +124,8 @@ export const certifications = [
   },
   {
     id: 'ibm-intern',
-    title: 'IBM PBEL Virtual Internship',
-    code: 'Web & Mobile',
+    title: 'IBM Virtual Internship — Web & Mobile Development',
+    code: 'PBEL',
     issuer: 'IBM',
     score: 'Completed',
     color: 'from-indigo-500 to-purple-600',
@@ -98,7 +133,17 @@ export const certifications = [
   },
 ];
 
-export const experiences = [
+export interface Experience {
+  id: string;
+  role: string;
+  org: string;
+  period: string;
+  current: boolean;
+  description: string;
+  icon: LucideIcon;
+}
+
+export const experiences: Experience[] = [
   {
     id: 'ecell',
     role: 'Campus Ambassador',
@@ -106,7 +151,7 @@ export const experiences = [
     period: 'Jul 2026 — Present',
     current: true,
     description:
-      'Representing the entrepreneurial cell on campus, driving awareness of innovation initiatives, and bridging the gap between students and the IIT Bombay startup ecosystem.',
+      'Digital activation drives, entrepreneurship outreach, and student engagement initiatives bridging the campus community with the IIT Bombay startup ecosystem.',
     icon: Zap,
   },
   {
@@ -116,21 +161,56 @@ export const experiences = [
     period: 'Jun 2025 — Aug 2025',
     current: false,
     description:
-      'Completed an intensive virtual internship focused on building responsive web and mobile applications, mastering modern development workflows, and delivering production-ready UI components.',
+      'Developed responsive web interfaces, integrated REST APIs, and built cloud-aligned full-stack architecture modules during an intensive virtual internship program.',
     icon: Code2,
+  },
+  {
+    id: 'self-driven',
+    role: 'Full-Stack & Open Source Developer',
+    org: 'Self-Driven',
+    period: '2025 — Present',
+    current: true,
+    description:
+      'Architecting React applications, custom UI component libraries, and cloud deployments across Netlify and Azure with a focus on clean, scalable code.',
+    icon: Rocket,
+  },
+  {
+    id: 'academic',
+    role: 'Academic Project Lead & DSA Practitioner',
+    org: 'UCER, Prayagraj',
+    period: '2024 — Present',
+    current: true,
+    description:
+      'Solved 100+ algorithmic problems on LeetCode & GFG in C++ & Java. Implemented relational schemas, normalization pipelines, and hardware 3D decoder models.',
+    icon: BookOpen,
   },
 ];
 
-export const projects = [
+export interface Project {
+  id: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  techStack: string[];
+  liveUrl: string;
+  githubUrl: string;
+  /** Optional URL for an embedded iframe preview modal. */
+  previewUrl?: string;
+  icon: LucideIcon;
+  gradient: string;
+}
+
+export const projects: Project[] = [
   {
     id: 'climato',
     title: 'Climato',
     subtitle: 'Real-Time Weather Analytics Dashboard',
     description:
-      'Asynchronous weather tracking application featuring reactive state management, custom error handling, and a sleek glassmorphic meteorological interface.',
-    techStack: ['React.js', 'OpenWeather API', 'Tailwind CSS'],
+      'Asynchronous weather tracking application featuring reactive state management, custom error handling, and a glassmorphic meteorological interface.',
+    techStack: ['React.js', 'OpenWeather API', 'Tailwind CSS', 'Vite'],
     liveUrl: 'https://climato-weather-app.netlify.app/',
     githubUrl: 'https://github.com/ayushks97/climato-weather-app',
+    previewUrl: 'https://climato-weather-app.netlify.app/',
     icon: Cloud,
     gradient: 'from-cyan-500/20 to-blue-600/20',
   },
@@ -140,7 +220,7 @@ export const projects = [
     subtitle: 'UI/UX Design',
     description:
       'High-conversion, cross-device responsive user authentication layout emphasizing modern design tokens and accessibility standards.',
-    techStack: ['HTML5', 'CSS3', 'JavaScript', 'UI/UX'],
+    techStack: ['HTML5', 'CSS3', 'JavaScript', 'UI/UX Design Tokens'],
     liveUrl: 'https://ayushks97.github.io/Login-page/',
     githubUrl: 'https://github.com/ayushks97/Login-page',
     icon: Layout,
@@ -152,17 +232,17 @@ export interface SkillCategory {
   id: string;
   title: string;
   icon: LucideIcon;
-  accent: string;
+  accent: 'indigo' | 'cyan';
   skills: string[];
 }
 
 export const skillCategories: SkillCategory[] = [
   {
     id: 'languages',
-    title: 'Languages',
+    title: 'Programming Languages',
     icon: Code2,
     accent: 'indigo',
-    skills: ['Java', 'C++', 'C', 'Python', 'SQL'],
+    skills: ['Java', 'C++', 'C', 'Python', 'SQL', 'JavaScript (ES6+)'],
   },
   {
     id: 'web',
@@ -173,11 +253,11 @@ export const skillCategories: SkillCategory[] = [
       'React.js',
       'Node.js',
       'Express.js',
-      'JavaScript (ES6+)',
       'HTML5',
       'CSS3',
       'Tailwind CSS',
       'REST APIs',
+      'Vite',
     ],
   },
   {
@@ -198,11 +278,29 @@ export const skillCategories: SkillCategory[] = [
     title: 'Core CS & Tools',
     icon: Terminal,
     accent: 'cyan',
-    skills: ['DSA', 'DBMS', 'OS', 'TAFL', 'OOP', 'Git', 'GitHub', 'VS Code', 'Postman', 'Linux'],
+    skills: [
+      'Data Structures & Algorithms (DSA)',
+      'DBMS',
+      'Operating Systems',
+      'TAFL',
+      'OOP',
+      'Git',
+      'GitHub',
+      'VS Code',
+      'Postman',
+      'Linux',
+    ],
   },
 ];
 
-export const socials = [
+export interface Social {
+  id: string;
+  label: string;
+  url: string;
+  icon: LucideIcon;
+}
+
+export const socials: Social[] = [
   {
     id: 'linkedin',
     label: 'LinkedIn',
@@ -217,8 +315,29 @@ export const socials = [
   },
 ];
 
-export const contactInfo = [
+export interface ContactItem {
+  id: string;
+  label: string;
+  value: string;
+  icon: LucideIcon;
+}
+
+export const contactInfo: ContactItem[] = [
   { id: 'email', label: 'Email', value: 'sayushkumar33@gmail.com', icon: Mail },
   { id: 'phone', label: 'Phone', value: '+91-6389687747', icon: Phone },
   { id: 'location', label: 'Location', value: 'Prayagraj, UP, India', icon: MapPin },
 ];
+
+export interface ContactFormData {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+}
+
+export interface FormErrors {
+  name?: string;
+  email?: string;
+  subject?: string;
+  message?: string;
+}

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Loader2, CheckCircle2, AlertCircle, X } from 'lucide-react';
 import type { ContactFormData, FormErrors } from '@/data/portfolio';
+import { supabase } from '@/lib/supabase';
 
 const EMPTY_FORM: ContactFormData = {
   name: '',
@@ -100,40 +101,18 @@ export default function ContactForm() {
     setSubmitError(null);
 
     try {
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-      const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-      if (!supabaseUrl || !supabaseKey) {
-        throw new Error('Configuration missing — unable to send message.');
-      }
-
-      // Direct Supabase REST API insert call (fixes JSON error)
-      const response = await fetch(`${supabaseUrl}/rest/v1/contact_submissions`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': supabaseKey,
-          'Authorization': `Bearer ${supabaseKey}`,
-          'Prefer': 'return=representation'
-        },
-        body: JSON.stringify({
-          full_name: formData.name,
+      // Insert submission using Supabase JS client
+      const { error } = await supabase
+        .from('contact_submissions')
+        .insert({
+          name: formData.name,
           email: formData.email,
           subject: formData.subject,
           message: formData.message
-        }),
-      });
+        });
 
-      if (!response.ok) {
-        const errText = await response.text();
-        let errMsg = `Request failed (${response.status})`;
-        try {
-          const errJson = JSON.parse(errText);
-          errMsg = errJson.message || errJson.error || errMsg;
-        } catch {
-          if (errText) errMsg = errText;
-        }
-        throw new Error(errMsg);
+      if (error) {
+        throw new Error(error.message || 'Failed to send message');
       }
 
       setIsSubmitted(true);

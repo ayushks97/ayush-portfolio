@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Loader2, CheckCircle2, AlertCircle, X } from 'lucide-react';
 import type { ContactFormData, FormErrors } from '@/data/portfolio';
-import { supabase } from '@/lib/supabase';
+import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
 const EMPTY_FORM: ContactFormData = {
   name: '',
@@ -101,6 +101,11 @@ export default function ContactForm() {
     setSubmitError(null);
 
     try {
+      // Check if Supabase is properly configured
+      if (!isSupabaseConfigured()) {
+        throw new Error('Configuration missing — unable to send message.');
+      }
+
       // Insert submission using Supabase JS client
       const { error } = await supabase
         .from('contact_submissions')

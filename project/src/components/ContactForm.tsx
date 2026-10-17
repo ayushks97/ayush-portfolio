@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Loader2, CheckCircle2, AlertCircle, X } from 'lucide-react';
 import type { ContactFormData, FormErrors } from '@/data/portfolio';
-import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
 const EMPTY_FORM: ContactFormData = {
   name: '',
@@ -101,32 +100,49 @@ export default function ContactForm() {
     setSubmitError(null);
 
     try {
-      // Check if Supabase is properly configured
-      if (!isSupabaseConfigured()) {
-        throw new Error('Configuration missing — unable to send message.');
-      }
+      console.log('📧 Sending message via Formspree (xvkzlnqa)...');
 
-      // Insert submission using Supabase JS client
-      const { error } = await supabase
-        .from('contact_submissions')
-        .insert({
+      // Formspree Endpoint from screenshot
+      const response = await fetch('https://formspree.io/f/xvkzlnqa', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
           name: formData.name,
           email: formData.email,
           subject: formData.subject,
-          message: formData.message
-        });
+          message: formData.message,
+          _replyto: formData.email,
+          _subject: `Portfolio Contact: ${formData.subject}`
+        }),
+      });
 
-      if (error) {
-        throw new Error(error.message || 'Failed to send message');
+      if (!response.ok) {
+        throw new Error('Failed to send message via Formspree');
       }
+
+      console.log('✅ Message delivered successfully!');
 
       setIsSubmitted(true);
       setFormData(EMPTY_FORM);
       setErrors({});
       setTouched({ name: false, email: false, subject: false, message: false });
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Something went wrong. Please try again.';
-      setSubmitError(msg);
+
+    } catch (err: any) {
+      console.error('❌ Send error:', err);
+
+      // Fallback: Agar connection issue aaye toh mailto client khol do
+      const mailtoLink = `mailto:sayushkumar33@gmail.com?subject=${encodeURIComponent(
+        formData.subject
+      )}&body=${encodeURIComponent(
+        `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
+      )}`;
+
+      window.location.href = mailtoLink;
+      setIsSubmitted(true);
+      setFormData(EMPTY_FORM);
     } finally {
       setIsSubmitting(false);
     }
@@ -213,10 +229,10 @@ export default function ContactForm() {
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
-              className="flex items-center gap-2 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300"
+              className="flex items-start gap-2 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300"
             >
-              <AlertCircle size={16} />
-              {submitError}
+              <AlertCircle size={16} className="mt-0.5 flex-shrink-0" />
+              <div className="whitespace-pre-line">{submitError}</div>
             </motion.div>
           )}
         </AnimatePresence>
